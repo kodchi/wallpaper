@@ -5,14 +5,17 @@ using Soup;
 public class Main : Object {
     const string UI_FILE = "main.ui";
 
+    // UI elements
     private Window window;
     private MessageDialog error_messagedialog;
     private Image image;
+
+    private GLib.Settings settings = new GLib.Settings ("org.gnome.desktop.background");
     private string wallpaper_url;
     private uint8[] wallpaper_data;
     private Array<string> wallpaper_urls = new Array<string> ();
     private Gdk.PixbufLoader loader;
-    private GLib.Settings settings = new GLib.Settings ("org.gnome.desktop.background");
+    private Gdk.Pixbuf pixbuf;
     
     public Main () {
         try {
@@ -26,6 +29,7 @@ public class Main : Object {
 
             window.show_all ();
         } catch (Error e) {
+            // todo: change the error message dialog text and show it
             stderr.printf ("Could not load UI: %s\n", e.message);
         } 
     }
@@ -37,25 +41,42 @@ public class Main : Object {
 
     [CCode (instance_pos = -1)]
     public void on_refresh_button_clicked (Button source) {
+        /*
+         * shows the downloaded image
+         */
         get_wallpaper_url ();
-        var session = new Soup.SessionAsync ();
-        var message = new Soup.Message ("GET", wallpaper_url);
-        session.send_message (message);
+        
+        try {
+            var session = new Soup.SessionAsync ();
+            var message = new Soup.Message ("GET", wallpaper_url);
+            session.send_message (message);
 
-        loader = new Gdk.PixbufLoader ();
-        loader.size_prepared.connect ((width, height) => {
-            int ratio;
-            if (width > height) {
-                ratio = width / 480;
-            } else {
-                ratio = height / 300;
+            loader = new Gdk.PixbufLoader ();
+            loader.write (message.response_body.data);
+            loader.close ();
+
+            pixbuf = loader.get_pixbuf ();
+
+            // scale the image down
+            int ratio = 1;
+            int width = pixbuf.get_width ();
+            int height = pixbuf.get_height ();
+            if (width > 480 && height > 300) {
+                if (width > height) {
+                    ratio = width / 480;
+                } else {
+                    ratio = height / 300;
+                }
             }
-            loader.set_size (width / ratio, height / ratio);
-        });
-        wallpaper_data = message.response_body.data;
-        loader.write (wallpaper_data);
-        loader.close ();
-        image.set_from_pixbuf (loader.get_pixbuf ());
+            // show image
+            image.set_from_pixbuf (
+                pixbuf.scale_simple (width / ratio, height / ratio, Gdk.InterpType.BILINEAR)
+            );
+        } catch (Error e) {
+            // todo: set the error message dialog and show it
+            // todo: exit this function
+        }
+
     }
 
     [CCode (instance_pos = -1)]
@@ -66,7 +87,6 @@ public class Main : Object {
         // todo: remember the user's pref
         string type = wallpaper_url.split (".")[1];
         string file_path = "/home/archmage/wallpaper.jpg";
-        var pixbuf = loader.get_pixbuf ();
         pixbuf.save (file_path, "jpeg");
 
         // set the desktop background

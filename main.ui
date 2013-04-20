@@ -41,16 +41,15 @@ Please try check your internet connection.</property>
     </child>
   </object>
   <object class="GtkWindow" id="window">
-    <property name="width_request">500</property>
-    <property name="height_request">400</property>
+    <property name="width_request">200</property>
+    <property name="height_request">100</property>
     <property name="can_focus">False</property>
     <property name="receives_default">True</property>
     <property name="hexpand">True</property>
     <property name="vexpand">True</property>
     <property name="title" translatable="yes">Wallpaper</property>
     <property name="resizable">False</property>
-    <property name="default_width">500</property>
-    <property name="default_height">400</property>
+    <property name="window_position">center</property>
     <signal name="destroy" handler="main_on_destroy" swapped="no"/>
     <child>
       <object class="GtkBox" id="box">
