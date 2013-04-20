@@ -9,10 +9,10 @@ public class Main : Object {
     private Window window;
     private MessageDialog error_messagedialog;
     private Image image;
+    private FileChooserDialog filechooserdialog;
 
     private GLib.Settings settings = new GLib.Settings ("org.gnome.desktop.background");
     private string wallpaper_url;
-    private uint8[] wallpaper_data;
     private Array<string> wallpaper_urls = new Array<string> ();
     private Gdk.PixbufLoader loader;
     private Gdk.Pixbuf pixbuf;
@@ -26,6 +26,7 @@ public class Main : Object {
             window = builder.get_object ("window") as Window;
             error_messagedialog = builder.get_object ("error_messagedialog") as MessageDialog;
             image = builder.get_object ("image") as Image;
+            filechooserdialog = builder.get_object("filechooserdialog") as FileChooserDialog;
 
             window.show_all ();
         } catch (Error e) {
@@ -81,16 +82,23 @@ public class Main : Object {
 
     [CCode (instance_pos = -1)]
     public void on_apply_button_clicked (Button source) {
-        // save the image to a file
-        // todo: get the actual file type
-        // todo: ask the user where to save the file
-        // todo: remember the user's pref
-        string type = wallpaper_url.split (".")[1];
-        string file_path = "/home/archmage/wallpaper.jpg";
-        pixbuf.save (file_path, "jpeg");
+        /*
+         * saves the image to a file and updates the desktop background
+         */
 
-        // set the desktop background
-        settings.set_string ("picture-uri", "file://" + file_path);
+        // todo: check if image is already loaded
+        // todo: remember the user's pref
+        int response = filechooserdialog.run ();
+        if (response == Gtk.ResponseType.ACCEPT) {
+            // todo handle this better, maybe set the currect dir as the default filename
+            // todo: change 'jpeg' to the actual file type
+            pixbuf.save (filechooserdialog.get_filename (), "jpeg");
+            // set the desktop background
+            settings.set_string ("picture-uri", filechooserdialog.get_uri ());
+            filechooserdialog.hide ();
+        } else if (response == Gtk.ResponseType.CANCEL) {
+            filechooserdialog.hide ();
+        }
     }
 
     [CCode (instance_pos = -1)]
@@ -131,6 +139,7 @@ public class Main : Object {
         /*
          * returns the next wallpapers url
          */
+        // todo: show a loading spinner
         if (wallpaper_urls.length < 1) {
             get_random_wallpapers ();
         }
