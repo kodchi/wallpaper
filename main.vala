@@ -45,6 +45,7 @@ public class Main : Object {
         /*
          * shows the downloaded image
          */
+
         get_wallpaper_url ();
         
         try {
@@ -111,7 +112,10 @@ public class Main : Object {
     }
 
     private void get_random_wallpapers () {
-        //gets and saves wallpaper urls in wallpaper_urls
+        /*
+         * gets and saves wallpaper urls in wallpaper_urls
+         */
+
         string url = "http://wallbase.cc/random";
         try {
             var session = new Soup.SessionAsync ();
@@ -139,6 +143,7 @@ public class Main : Object {
         /*
          * returns the next wallpapers url
          */
+
         // todo: show a loading spinner
         if (wallpaper_urls.length < 1) {
             get_random_wallpapers ();
@@ -168,8 +173,9 @@ public class Main : Object {
 
     string decode_wallpaper_url (string a) {
         /*
-         *  returns a url from decoded string 'a'
+         *  returns a url from the decoded string 'a'
          */
+
         int c, d, e, f, g, h, i, j, k = 0;
         string b = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
         string[] n = {};

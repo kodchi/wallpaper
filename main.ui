@@ -113,15 +113,14 @@ Please try check your internet connection.</property>
     </action-widgets>
   </object>
   <object class="GtkWindow" id="window">
-    <property name="width_request">200</property>
-    <property name="height_request">100</property>
+    <property name="width_request">150</property>
+    <property name="height_request">50</property>
     <property name="can_focus">False</property>
-    <property name="receives_default">True</property>
     <property name="hexpand">True</property>
     <property name="vexpand">True</property>
     <property name="title" translatable="yes">Wallpaper</property>
     <property name="resizable">False</property>
-    <property name="window_position">center</property>
+    <property name="gravity">center</property>
     <signal name="destroy" handler="main_on_destroy" swapped="no"/>
     <child>
       <object class="GtkBox" id="box">
@@ -132,6 +131,7 @@ Please try check your internet connection.</property>
           <object class="GtkToolbar" id="toolbar">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="icon_size">5</property>
             <style>
               <class name="GTK_TOOLBAR_BOTH"/>
               <class name="primary-toolbar"/>
@@ -140,7 +140,7 @@ Please try check your internet connection.</property>
               <object class="GtkToolButton" id="refresh_button">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">Get another image</property>
+                <property name="tooltip_text" translatable="yes">Get Image</property>
                 <property name="label" translatable="yes">Refresh</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-refresh</property>
