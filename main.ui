@@ -120,6 +120,7 @@ Please try check your internet connection.</property>
     <property name="vexpand">True</property>
     <property name="title" translatable="yes">Wallpaper</property>
     <property name="resizable">False</property>
+    <property name="icon_name">emblem-photos</property>
     <property name="gravity">center</property>
     <signal name="destroy" handler="main_on_destroy" swapped="no"/>
     <child>

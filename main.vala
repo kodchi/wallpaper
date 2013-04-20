@@ -141,7 +141,7 @@ public class Main : Object {
 
     private void get_wallpaper_url () {
         /*
-         * returns the next wallpapers url
+         * returns the next wallpaper's url
          */
 
         // todo: show a loading spinner
@@ -173,7 +173,7 @@ public class Main : Object {
 
     string decode_wallpaper_url (string a) {
         /*
-         *  returns a url from the decoded string 'a'
+         *  returns a url from the encoded string 'a'
          */
 
         int c, d, e, f, g, h, i, j, k = 0;
